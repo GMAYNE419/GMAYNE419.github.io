@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paper Trail — waitlist</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@500;700&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+  :root{
+    --ink:#1B2A3D;
+    --ink-light:#28405C;
+    --paper:#EEE7D2;
+    --paper-dark:#E1D7BA;
+    --stamp:#A63A2E;
+    --teal:#2C6659;
+    --text-ink:#241F16;
+    --text-ink-soft:#5B5347;
+    --text-on-ink:#EEE7D2;
+    --text-on-ink-soft:#B8C3D1;
+    --gold:#B98F1F;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--ink);
+    color:var(--text-on-ink);
+    font-family:'IBM Plex Sans',sans-serif;
+    line-height:1.6;
+  }
+  .wrap{max-width:1080px;margin:0 auto;padding:2.5rem 1.5rem 4rem;}
+  .brand{
+    display:flex;align-items:center;gap:10px;
+    font-family:'Zilla Slab',serif;font-weight:700;font-size:1.15rem;
+    letter-spacing:0.02em;margin-bottom:3rem;
+  }
+  .brand .mark{
+    width:26px;height:26px;border:2px solid var(--gold);border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    color:var(--gold);font-size:0.85rem;font-family:'IBM Plex Mono',monospace;
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:0.78rem;letter-spacing:0.08em;text-transform:uppercase;
+    color:var(--gold);margin-bottom:1rem;
+  }
+  .hero{display:grid;grid-template-columns:1.1fr 0.9fr;gap:3.5rem;align-items:start;}
+  @media (max-width:820px){.hero{grid-template-columns:1fr;}}
+
+  .toggle{
+    display:inline-flex;border:1px solid var(--ink-light);border-radius:999px;
+    padding:3px;margin-bottom:1.75rem;font-family:'IBM Plex Mono',monospace;font-size:0.78rem;
+  }
+  .toggle button{
+    background:none;border:none;color:var(--text-on-ink-soft);
+    padding:7px 16px;border-radius:999px;cursor:pointer;font-family:inherit;font-size:inherit;
+    transition:background .15s ease, color .15s ease;
+  }
+  .toggle button.active{background:var(--paper);color:var(--text-ink);}
+
+  h1{
+    font-family:'Zilla Slab',serif;font-weight:700;
+    font-size:2.6rem;line-height:1.08;margin:0 0 1.1rem;
+    color:#fff;letter-spacing:-0.01em;
+  }
+  @media (max-width:600px){h1{font-size:2rem;}}
+  .sub{font-size:1.05rem;color:var(--text-on-ink-soft);max-width:44ch;margin:0 0 1.9rem;}
+
+  form{display:flex;gap:0;max-width:420px;margin-bottom:0.75rem;}
+  input[type=email]{
+    flex:1;padding:13px 14px;border:1px solid var(--ink-light);border-right:none;
+    border-radius:6px 0 0 6px;background:var(--ink-light);color:#fff;
+    font-family:'IBM Plex Sans',sans-serif;font-size:0.95rem;
+  }
+  input[type=email]::placeholder{color:var(--text-on-ink-soft);}
+  input[type=email]:focus{outline:none;box-shadow:0 0 0 2px var(--gold) inset;}
+  button.cta{
+    padding:13px 20px;border:none;border-radius:0 6px 6px 0;
+    background:var(--stamp);color:#fff;font-weight:500;font-size:0.95rem;
+    cursor:pointer;font-family:'IBM Plex Sans',sans-serif;white-space:nowrap;
+  }
+  button.cta:hover{background:#8f3025;}
+  .formnote{font-size:0.78rem;color:var(--text-on-ink-soft);}
+  .success{
+    font-size:0.9rem;color:var(--teal);background:rgba(44,102,89,0.18);
+    border:1px solid var(--teal);padding:10px 14px;border-radius:6px;max-width:420px;display:none;
+  }
+
+  .why{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;margin-top:3.5rem;}
+  @media (max-width:700px){.why{grid-template-columns:1fr;}}
+  .why-item{border-top:1px solid var(--ink-light);padding-top:0.9rem;}
+  .why-item .num{font-family:'IBM Plex Mono',monospace;color:var(--gold);font-size:0.78rem;}
+  .why-item p{margin:0.4rem 0 0;font-size:0.92rem;color:var(--text-on-ink-soft);}
+
+  /* --- receipt mock --- */
+  .receipt-holder{display:flex;justify-content:center;padding-top:1rem;}
+  .receipt{
+    background:var(--paper);color:var(--text-ink);width:100%;max-width:340px;
+    border-radius:2px;padding:0 22px 20px;position:relative;
+    transform:rotate(1.4deg);box-shadow:0 18px 40px rgba(0,0,0,0.35);
+  }
+  .receipt::before{
+    content:"";display:block;height:12px;margin:0 -22px 14px;
+    background-image:radial-gradient(circle at 10px 0, var(--ink) 9px, transparent 9.5px);
+    background-size:20px 12px;background-repeat:repeat-x;
+  }
+  .receipt-title{
+    font-family:'IBM Plex Mono',monospace;font-size:0.72rem;letter-spacing:0.06em;
+    color:var(--text-ink-soft);text-transform:uppercase;text-align:center;margin-bottom:14px;
+  }
+  .bubble{max-width:78%;padding:9px 12px;border-radius:10px;font-size:0.88rem;margin-bottom:10px;}
+  .bubble.in{background:var(--paper-dark);color:var(--text-ink);border-radius:10px 10px 10px 2px;}
+  .bubble.out{background:var(--teal);color:#fff;margin-left:auto;border-radius:10px 10px 2px 10px;position:relative;}
+  .stamp{
+    position:absolute;right:8px;top:112px;width:96px;height:96px;
+    border:3px solid var(--stamp);border-radius:50%;color:var(--stamp);
+    display:flex;align-items:center;justify-content:center;text-align:center;
+    font-family:'IBM Plex Mono',monospace;font-size:0.62rem;font-weight:500;letter-spacing:0.03em;
+    transform:rotate(-11deg);line-height:1.25;mix-blend-mode:multiply;
+  }
+  .receipt-foot{
+    border-top:1px dashed var(--text-ink-soft);margin-top:8px;padding-top:8px;
+    font-family:'IBM Plex Mono',monospace;font-size:0.68rem;color:var(--text-ink-soft);
+    display:flex;justify-content:space-between;
+  }
+
+  .stats{
+    margin-top:4.5rem;border-top:1px solid var(--ink-light);padding-top:1.5rem;
+    font-family:'IBM Plex Mono',monospace;font-size:0.78rem;color:var(--text-on-ink-soft);
+  }
+  .stats-title{letter-spacing:0.06em;text-transform:uppercase;font-size:0.72rem;color:var(--gold);margin-bottom:0.9rem;}
+  .stats-row{display:flex;gap:2.5rem;flex-wrap:wrap;}
+  .stats-col{min-width:150px;}
+  .stats-col .label{color:#fff;margin-bottom:4px;}
+  .stats-col div{margin-bottom:2px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="brand"><span class="mark">PT</span> Paper Trail</div>
+
+  <div class="hero">
+    <div>
+      <div class="eyebrow">For first-time landlords</div>
+
+      <div class="toggle" role="group" aria-label="Preview messaging variant">
+        <button id="btnA" class="active" onclick="preview('A')">Protect</button>
+        <button id="btnB" onclick="preview('B')">Simple</button>
+      </div>
+
+      <h1 id="headline">Every text to your tenant, legally covered.</h1>
+      <p class="sub" id="subhead">You're probably already texting your tenant about rent and repairs — most first-time landlords do. Paper Trail turns those ordinary texts into a dated, consent-backed record, so if anything is ever disputed, you have proof instead of just a memory.</p>
+
+      <form id="waitForm">
+        <input type="email" id="emailInput" placeholder="you@email.com" required>
+        <button type="submit" class="cta" id="ctaBtn">Get on the waitlist</button>
+      </form>
+      <div class="formnote">No spam. One email when it's ready.</div>
+      <div class="success" id="successMsg">You're on the list. We'll email you when Paper Trail opens up.</div>
+
+      <div class="why">
+        <div class="why-item"><div class="num">01</div><p>Rent reminders go out as consent-backed texts, not casual ones.</p></div>
+        <div class="why-item"><div class="num">02</div><p>Every message is timestamped and archived automatically.</p></div>
+        <div class="why-item"><div class="num">03</div><p>A quick tone check flags risky wording before you hit send.</p></div>
+      </div>
+    </div>
+
+    <div class="receipt-holder">
+      <div class="receipt">
+        <div class="receipt-title">Tenant thread · Unit 2B</div>
+        <div class="bubble in">Hey, kitchen faucet's been dripping since Tuesday</div>
+        <div class="bubble out">Got it — sending someone Thursday 10am, ok?</div>
+        <div class="stamp">CONSENT<br>CAPTURED<br>&#10003;</div>
+        <div class="bubble in">Yes that works, thank you!</div>
+        <div class="receipt-foot"><span>Receipt No. PT-004821</span><span>3:42 PM</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stats-title">Live test results</div>
+    <div class="stats-row" id="statsRow">
+      <div class="stats-col"><div class="label">Variant A — Protect</div><div id="statA">loading…</div></div>
+      <div class="stats-col"><div class="label">Variant B — Simple</div><div id="statB">loading…</div></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const copy = {
+  A: {
+    headline: "Every text to your tenant, legally covered.",
+    subhead: "You're probably already texting your tenant about rent and repairs — most first-time landlords do. Paper Trail turns those ordinary texts into a dated, consent-backed record, so if anything is ever disputed, you have proof instead of just a memory.",
+    cta: "Get on the waitlist"
+  },
+  B: {
+    headline: "Run your one rental like you're texting a friend.",
+    subhead: "No dashboards, no portfolio screens, no software to learn. Just a normal text thread with your tenant for rent, repairs, and lease stuff, the way you already talk to people.",
+    cta: "Get on the waitlist"
+  }
+};
+
+let currentVariant = 'A';
+let impressionCounted = false;
+
+function preview(v){
+  currentVariant = v;
+  document.getElementById('headline').textContent = copy[v].headline;
+  document.getElementById('subhead').textContent = copy[v].subhead;
+  document.getElementById('ctaBtn').textContent = copy[v].cta;
+  document.getElementById('btnA').classList.toggle('active', v==='A');
+  document.getElementById('btnB').classList.toggle('active', v==='B');
+}
+
+async function bumpStat(variant, field){
+  const key = 'stats:' + variant;
+  let current = { impressions: 0, signups: 0 };
+  try{
+    const res = await window.storage.get(key, true);
+    if(res && res.value) current = JSON.parse(res.value);
+  }catch(e){}
+  current[field] = (current[field] || 0) + 1;
+  try{
+    await window.storage.set(key, JSON.stringify(current), true);
+  }catch(e){}
+  return current;
+}
+
+async function loadStats(){
+  for(const v of ['A','B']){
+    let current = { impressions: 0, signups: 0 };
+    try{
+      const res = await window.storage.get('stats:' + v, true);
+      if(res && res.value) current = JSON.parse(res.value);
+    }catch(e){}
+    const rate = current.impressions > 0 ? ((current.signups / current.impressions) * 100).toFixed(1) : '0.0';
+    const el = document.getElementById('stat' + v);
+    el.innerHTML = current.impressions + ' views<br>' + current.signups + ' signups<br>' + rate + '% conversion';
+  }
+}
+
+async function init(){
+  const assigned = Math.random() < 0.5 ? 'A' : 'B';
+  preview(assigned);
+  if(!impressionCounted){
+    impressionCounted = true;
+    await bumpStat(assigned, 'impressions');
+  }
+  loadStats();
+}
+
+document.getElementById('waitForm').addEventListener('submit', async function(e){
+  e.preventDefault();
+  const email = document.getElementById('emailInput').value.trim();
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return;
+  const key = 'signup:' + Date.now() + ':' + Math.random().toString(36).slice(2,8);
+  try{
+    await window.storage.set(key, JSON.stringify({ email: email, variant: currentVariant, ts: Date.now() }), true);
+  }catch(err){}
+  await bumpStat(currentVariant, 'signups');
+  document.getElementById('waitForm').style.display = 'none';
+  document.querySelector('.formnote').style.display = 'none';
+  document.getElementById('successMsg').style.display = 'block';
+  loadStats();
+});
+
+init();
+</script>
+</body>
+</html>
